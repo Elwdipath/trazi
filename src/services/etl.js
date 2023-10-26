@@ -2,6 +2,7 @@ import fs from 'fs'
 
 const dbPath = 'src/data/city_populations.csv'
 
+//Check if csv file exists and if it does, start etl process
 if (fs.existsSync(dbPath)){
     fs.readFile(dbPath, 'utf-8', (err, data) => {
         if (err) {
@@ -10,7 +11,6 @@ if (fs.existsSync(dbPath)){
         }
         const lines = data.split(/\r?\n/)
         const csvData = lines.map((line) => line.split(','))
-        
         let transformedData = {}
     
         csvData.forEach(index => {
@@ -30,14 +30,16 @@ if (fs.existsSync(dbPath)){
             console.log('done')
         })
         //Remove csv file as it is no longer going to be used. 
-        fs.rm('src/data/city_populations.csv', (err) => {
-            if (err){
-                console.error(err)
-            }
-            console.log('CSV file deleted')
-        })
+        // fs.rm('src/data/city_populations.csv', (err) => {
+        //     if (err){
+        //         console.error(err)
+        //     }
+        //     console.log('CSV file deleted')
+        // })
+        //Exit ETL process and start Server
+        // process.exit(1)
     })
 } else {
     console.log('no csv file')
+    process.exit(1)
 }
-

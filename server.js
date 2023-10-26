@@ -1,21 +1,9 @@
 import Fastify from "fastify";
-import popDb from './src/data/transformed.json' assert {type: 'json'}
+import { routes } from "./src/routes/routes.js";
 
 const fastify = Fastify({ logger: true })
 
-fastify.get('/', (request, reply) => {
-    reply.send("Hello World")
-})
-
-fastify.get('/api/population/state/:state/city/:city', (request, reply) => {
-    const { state, city} = request.params
-    let payload = popDb[state][city]
-    reply.send(payload)
-})
-
-fastify.put('/api/population/state/:state/city/:city', (request, reply) => {
-    reply.send("Hello World")
-})
+fastify.register(routes)
 
 fastify.listen({ port: 5555 }, (err, address) => {
     if (err){

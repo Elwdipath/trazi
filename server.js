@@ -7,7 +7,7 @@ fastify.register(routes)
 
 fastify.listen({ port: 5555 }, (err, address) => {
     if (err){
-        fastify.log.err(err)
+        console.error(err)
         process.exit(1)
     }
     console.log(`Listening on Port : ${ address } 🌎`)

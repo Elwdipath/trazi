@@ -3,10 +3,12 @@ import fs from 'fs'
 const dbPath = 'src/data/city_populations.csv'
 
 function normalizeString(string){
-    let split = string.split(' ')
-    let join = split.join('')
-    
-    return join.toLowerCase()
+    if (string !== undefined){
+        let split = string.split(' ')
+        let join = split.join('')
+        
+        return join.toLowerCase()
+    }
 }
 
 //Check if csv file exists and if it does, start etl process
@@ -22,15 +24,17 @@ if (fs.existsSync(dbPath)){
             let transformedData = {}
         
             csvData.forEach(index => {
-                const city = normalizeString(index[0])
-                const state = normalizeString(index[2])
-                const population = index[2]
-                
-                if (!transformedData[state]){
-                    transformedData[state] = {}
+                if (index !== undefined) {
+                    const city = normalizeString(index[0])
+                    const state = normalizeString(index[1])
+                    const population = index[2]
+                    
+                    if (!transformedData[state]){
+                        transformedData[state] = {}
+                    }
+            
+                    transformedData[state][city] = parseInt(population)
                 }
-        
-                transformedData[state][city] = parseInt(population)
             })
             fs.writeFile('src/data/popDb.json', JSON.stringify(transformedData), (err) => {
                 if (err){

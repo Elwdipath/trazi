@@ -17,18 +17,22 @@ function updateDb(params){
 
 export async function routes(fastify, options){
     fastify.get('/api/population/state/:state/city/:city', (request, reply) => {
-        let state = request.params.state.toLowerCase()
-        let city = request.params.city.toLowerCase()
-        if (!popDb[state] || !popDb[state][city]){
-            return reply.send(`Unknown city or state: ${city}, ${state}`)  
-        } else {
-            let payload = popDb[state][city]
-            return reply.send(payload)
+        try {
+            let state = request.params.state.toLowerCase()
+            let city = request.params.city.toLowerCase()
+            if (!popDb[state] || !popDb[state][city]){
+                return reply.status(200).send(`Unknown city or state: ${city}, ${state}`)  
+            } else {
+                let payload = popDb[state][city]
+                return reply.status(200).send(payload)
+            }
+        }catch (err){
+            return reply.status(400).send(`There was an error with your request: ${err}`)
         }
     })
 
     fastify.get('/', (request, reply) => {
-        return reply.send("Hello World")
+        return reply.status(200).send("Hello World")
     })
     
     fastify.put('/api/population/state/:state/city/:city', (request, reply) => {
